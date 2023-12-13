@@ -5,6 +5,10 @@
   },
   "pages": [],
   "extensions": [
-    
+    {
+      "name": "defaulter-tracing-dashboard",
+      "component": "defaulterTracing",
+      "slot": "patient-chart-summary-dashboard-slot"
+    }
   ]
 }
