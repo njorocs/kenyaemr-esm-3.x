@@ -45,7 +45,7 @@ const DefaulterTracing: React.FC<PatientTracingProps> = ({ patientUuid, encounte
     formsList: { defaulterTracingFormUuid },
   } = useConfig<ConfigObject>();
   const headerTitle = t('defaulterTracing', 'Defaulter Tracing');
-  const { encounters, isLoading, error, mutate, isValidating } = usePatientTracing(
+  const { encounters, isLoading, error, mutate, isValidating, groupedEncounters } = usePatientTracing(
     patientUuid,
     defaulterTracingEncounterUuid,
   );
@@ -92,7 +92,30 @@ const DefaulterTracing: React.FC<PatientTracingProps> = ({ patientUuid, encounte
       header: t('actions', 'Actions'),
     },
   ];
-
+  const groupedTableRows = Object.entries(groupedEncounters).map(([key, encounter]) => {
+    return {
+      id: `${key}`,
+      missedAppointmentDate:
+        getObsFromEncounter(encounter[0], MissedAppointmentDate_UUID) == '--' ||
+        getObsFromEncounter(encounter[0], MissedAppointmentDate_UUID) == null
+          ? formatDate(parseDate(encounter[0].encounterDatetime))
+          : formatDate(parseDate(getObsFromEncounter(encounter, MissedAppointmentDate_UUID))),
+      visitDate: formatDate(new Date(encounter[0].encounterDatetime)),
+      tracingType: getObsFromEncounter(encounter[0], TracingType_UUID),
+      tracingNumber: getObsFromEncounter(encounter[0], TracingNumber_UUID),
+      contacted: getObsFromEncounter(encounter[0], Contacted_UUID),
+      finalOutcome: getObsFromEncounter(encounter[0], TracingOutcome_UUID),
+      actions: (
+        <OverflowMenu aria-label="overflow-menu" flipped="false">
+          <OverflowMenuItem
+            onClick={() => handleOpenOrEditDefaulterTracingForm(encounter[0].uuid)}
+            itemText={t('edit', 'Edit')}
+          />
+          <OverflowMenuItem itemText={t('delete', 'Delete')} isDelete />
+        </OverflowMenu>
+      ),
+    };
+  });
   const tableRows = encounters.map((encounter, index) => {
     return {
       id: `${encounter.uuid}`,
@@ -146,7 +169,7 @@ const DefaulterTracing: React.FC<PatientTracingProps> = ({ patientUuid, encounte
         </Button>
       </CardHeader>
       <DataTable
-        rows={tableRows}
+        rows={groupedTableRows}
         headers={tableHeader}
         render={({
           rows,

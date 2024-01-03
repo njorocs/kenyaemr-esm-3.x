@@ -15,9 +15,29 @@ export function usePatientTracing(patientUuid: string, encounterType: string) {
     url,
     openmrsFetch,
   );
+  const responseData = data?.data ? data?.data?.results : [];
+  const results = responseData.flatMap((el) => el.obs).filter((obs) => obs.concept.uuid === MissedAppointmentDate_UUID);
+
+  const groupedData = results.reduce((acc, encounter) => {
+    const sessionDate = encounter.value;
+    if (!acc[sessionDate]) {
+      // If the key doesn't exist in the accumulator, create it with an empty array. We could also use encounter date?
+      acc[sessionDate] = [];
+    }
+    //Push the encounter to the corresponding sessionDate key
+    acc[sessionDate].push(encounter);
+    return acc;
+  }, {});
+  const uniqueSessionDates = results.map((el) => el.value);
+  uniqueSessionDates.map(() => {
+    const data = responseData.find((encounter) =>
+      encounter.obs.find((ob) => ob.concept.uuid === MissedAppointmentDate_UUID),
+    );
+  });
 
   return {
     encounters: data?.data ? data?.data?.results : [],
+    groupedEncounters: groupedData,
     isLoading,
     isValidating,
     error,
