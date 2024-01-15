@@ -95,16 +95,17 @@ const DefaulterTracing: React.FC<PatientTracingProps> = ({ patientUuid, encounte
   const groupedTableRows = Object.entries(groupedEncounters).map(([key, encounter]) => {
     return {
       id: `${key}`,
+      // visitDate: formatDate(new Date((encounter as { encounterDatetime: string }).encounterDatetime)),
       missedAppointmentDate:
-        getObsFromEncounter(encounter[0], MissedAppointmentDate_UUID) == '--' ||
-        getObsFromEncounter(encounter[0], MissedAppointmentDate_UUID) == null
-          ? formatDate(parseDate(encounter[0].encounterDatetime))
+        getObsFromEncounter(encounter, MissedAppointmentDate_UUID) == '--' ||
+        getObsFromEncounter(encounter, MissedAppointmentDate_UUID) == null
+          ? formatDate(parseDate((encounter as { encounterDatetime: string }).encounterDatetime))
           : formatDate(parseDate(getObsFromEncounter(encounter, MissedAppointmentDate_UUID))),
-      visitDate: formatDate(new Date(encounter[0].encounterDatetime)),
-      tracingType: getObsFromEncounter(encounter[0], TracingType_UUID),
-      tracingNumber: getObsFromEncounter(encounter[0], TracingNumber_UUID),
-      contacted: getObsFromEncounter(encounter[0], Contacted_UUID),
-      finalOutcome: getObsFromEncounter(encounter[0], TracingOutcome_UUID),
+      visitDate: formatDate(parseDate((encounter as { encounterDatetime: string }).encounterDatetime)),
+      tracingType: getObsFromEncounter(encounter, TracingType_UUID),
+      tracingNumber: getObsFromEncounter(encounter, TracingNumber_UUID),
+      contacted: getObsFromEncounter(encounter, Contacted_UUID),
+      finalOutcome: getObsFromEncounter(encounter, TracingOutcome_UUID),
       actions: (
         <OverflowMenu aria-label="overflow-menu" flipped="false">
           <OverflowMenuItem
@@ -116,7 +117,7 @@ const DefaulterTracing: React.FC<PatientTracingProps> = ({ patientUuid, encounte
       ),
     };
   });
-  const tableRows = encounters.map((encounter, index) => {
+  /*  const tableRows = encounters.map((encounter, index) => {
     return {
       id: `${encounter.uuid}`,
       missedAppointmentDate:
@@ -139,8 +140,7 @@ const DefaulterTracing: React.FC<PatientTracingProps> = ({ patientUuid, encounte
         </OverflowMenu>
       ),
     };
-  });
-
+  });*/
   if (isLoading) {
     return <DataTableSkeleton headers={tableHeader} aria-label="Defaulter Tracing" />;
   }
@@ -170,6 +170,7 @@ const DefaulterTracing: React.FC<PatientTracingProps> = ({ patientUuid, encounte
       </CardHeader>
       <DataTable
         rows={groupedTableRows}
+        // rows={tableRows}
         headers={tableHeader}
         render={({
           rows,
@@ -214,7 +215,12 @@ const DefaulterTracing: React.FC<PatientTracingProps> = ({ patientUuid, encounte
                       {...getExpandedRowProps({
                         row,
                       })}>
-                      <h6>To do...</h6>
+                      <h6>
+                        {' '}
+                        {row.cells.map((cell) => (
+                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                        ))}
+                      </h6>
                     </TableExpandedRow>
                   </React.Fragment>
                 ))}

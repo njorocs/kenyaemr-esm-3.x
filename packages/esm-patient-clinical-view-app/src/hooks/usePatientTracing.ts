@@ -34,7 +34,7 @@ export function usePatientTracing(patientUuid: string, encounterType: string) {
       encounter.obs.find((ob) => ob.concept.uuid === MissedAppointmentDate_UUID),
     );
   });
-
+  // console.log("Grouped enc : ",groupedData);
   return {
     encounters: data?.data ? data?.data?.results : [],
     groupedEncounters: groupedData,
