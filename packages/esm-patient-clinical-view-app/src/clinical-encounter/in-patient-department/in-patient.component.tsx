@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import ClinicalEncounter from '../clinical-enc.component';
-import SurgicalSummery from '../summary/surgical summary/surgical-summary.component';
-import NeonatalSummery from '../summary/neonatal summary/neonatal-summery.component';
+import SurgicalSummary from '../summary/surgical summary/surgical-summary.component';
+import NeonatalSummary from '../summary/neonatal summary/neonatal-summery.component';
 import {
   Activity,
   CloudMonitoring,
@@ -19,21 +19,21 @@ import InPatientSummary from '../summary/in-patient-medical-summary/in-patient-m
 import OutPatientSocialHistory from '../summary/out-patient-summary/patient-social-history.component';
 import OutPatientMedicalHistory from '../summary/out-patient-summary/patient-medical-history.component';
 
-interface InpatientProps {
+interface InAndOutpatientProps {
   patientUuid: string;
   encounterTypeUuid: string;
   formEntrySub: any;
   launchPatientWorkspace: Function;
 }
 
-const InPatientView: React.FC<InpatientProps> = ({ patientUuid, encounterTypeUuid }) => {
+const InAndOutPatientView: React.FC<InAndOutpatientProps> = ({ patientUuid, encounterTypeUuid }) => {
   const { t } = useTranslation();
   return (
     <>
       <Layer>
         <Tile>
           <div className={styles.desktopHeading}>
-            <h4>{t('inPatient', 'In Patient')}</h4>
+            <h4>{t('clinicalEncounter', 'Clinical Encounter')}</h4>
           </div>
         </Tile>
       </Layer>
@@ -53,10 +53,10 @@ const InPatientView: React.FC<InpatientProps> = ({ patientUuid, encounterTypeUui
             <TabPanel>{<OutPatientMedicalHistory patientUuid={patientUuid} />}</TabPanel>
             <TabPanel>{<ClinicalEncounter patientUuid={patientUuid} />}</TabPanel>
             <TabPanel>
-              <SurgicalSummery encounterTypeUuid={encounterTypeUuid} patientUuid={patientUuid} />
+              <SurgicalSummary encounterTypeUuid={encounterTypeUuid} patientUuid={patientUuid} />
             </TabPanel>
             <TabPanel>
-              <NeonatalSummery patientUuid={patientUuid} />
+              <NeonatalSummary patientUuid={patientUuid} />
             </TabPanel>
             <TabPanel>
               <MaternalSummary patientUuid={patientUuid} />
@@ -70,4 +70,4 @@ const InPatientView: React.FC<InpatientProps> = ({ patientUuid, encounterTypeUui
     </>
   );
 };
-export default InPatientView;
+export default InAndOutPatientView;

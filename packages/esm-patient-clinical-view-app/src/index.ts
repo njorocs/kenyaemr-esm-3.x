@@ -3,7 +3,7 @@ import { createDashboardLink } from '@openmrs/esm-patient-common-lib';
 import { configSchema } from './config-schema';
 import { createDashboardGroup } from './clinical-view-group/createDashboardGroup';
 import DefaulterTracing from './special-clinics/hiv-care-and-treatment-services/defaulter-tracing/defaulter-tracing.component';
-import InPatientView from './clinical-encounter/in-patient-department/in-patient.component';
+import InAndOutPatientView from './clinical-encounter/in-patient-department/in-patient.component';
 import FamilyHistory from './family-partner-history/family-history.component';
 import HivTestingEncountersList from './special-clinics/hiv-care-and-treatment-services/hiv-testing-services/views/hiv-testing/hiv-testing-services.component';
 import ClinicalViewSection from './clinical-view-group/clinical-view-section.component';
@@ -45,7 +45,7 @@ export const inPatientClinicalEncounterLink = getSyncLifecycle(
   createDashboardLink(inPatientClinicalEncounterDashboardMeta),
   options,
 );
-export const inPatientClinicalEncounter = getSyncLifecycle(InPatientView, options);
+export const inPatientClinicalEncounter = getSyncLifecycle(InAndOutPatientView, options);
 export const clinicalViewPatientDashboard = getSyncLifecycle(ClinicalViewSection, options);
 
 // Navigation group for HIV Care and Treatment in the patient chart sidebar
